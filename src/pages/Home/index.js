@@ -11,11 +11,12 @@ import { ProductList } from './styles';
 
 function Home(props) {
   const [products, setProducts] = useState([]);
+  const { amount } = props;
 
-  function handleAddProduct(product) {
-    const { addToCart } = props;
+  function handleAddProduct(id) {
+    const { addToCartRequest } = props;
 
-    addToCart(product);
+    addToCartRequest(id);
   }
 
   useEffect(() => {
@@ -36,9 +37,9 @@ function Home(props) {
           <strong>{product.title}</strong>
           <span>{product.priceFormatted}</span>
 
-          <button type="button" onClick={() => handleAddProduct(product)}>
+          <button type="button" onClick={() => handleAddProduct(product.id)}>
             <div>
-              <MdAddShoppingCart /> 2
+              <MdAddShoppingCart /> {amount[product.id] || 0}
             </div>
             <span>ADICIONAR AO CARRINHO</span>
           </button>
@@ -48,7 +49,15 @@ function Home(props) {
   );
 }
 
+const mapStateToProps = (state) => ({
+  amount: state.cart.reduce((amount, product) => {
+    amount[product.id] = product.amount;
+
+    return amount;
+  }, {}),
+});
+
 const mapDispatchToProps = (dispatch) =>
   bindActionCreators(CartActions, dispatch);
 
-export default connect(null, mapDispatchToProps)(Home);
+export default connect(mapStateToProps, mapDispatchToProps)(Home);
