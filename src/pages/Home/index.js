@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { MdAddShoppingCart } from 'react-icons/md';
-import { FormatPrice } from '../../util/format';
+import { formatPrice } from '../../util/format';
 import api from '../../services/api';
 
 import * as CartActions from '../../store/modules/cart/actions';
@@ -22,7 +22,7 @@ function Home(props) {
     api.get('/products').then((response) => {
       const data = response.data.map((product) => ({
         ...product,
-        priceFormatted: FormatPrice(product.price),
+        priceFormatted: formatPrice(product.price),
       }));
       setProducts(data);
     });
