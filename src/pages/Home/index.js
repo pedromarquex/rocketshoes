@@ -9,24 +9,26 @@ import * as CartActions from '../../store/modules/cart/actions';
 
 import { ProductList } from './styles';
 
-function Home(props) {
+function Home({ amount, addToCartRequest }) {
   const [products, setProducts] = useState([]);
-  const { amount } = props;
 
   function handleAddProduct(id) {
-    const { addToCartRequest } = props;
-
     addToCartRequest(id);
   }
 
   useEffect(() => {
-    api.get('/products').then((response) => {
+    async function loadProducts() {
+      const response = await api.get('/products');
+
       const data = response.data.map((product) => ({
         ...product,
         priceFormatted: formatPrice(product.price),
       }));
+
       setProducts(data);
-    });
+    }
+
+    loadProducts();
   }, []);
 
   return (
